@@ -1,0 +1,21 @@
+#!/bin/sh
+
+target_dir=target
+
+generate_html_and_pdf () {
+    title=$1
+    src_prefix=markdown/${title}
+    dst_dir=${target_dir}/${title}
+    dst_prefix=${dst_dir}/${title}
+    mkdir -p ${dst_dir}
+    cp ${src_prefix}.markdown ${dst_prefix}.markdown
+    nodejs md2html.js ${dst_prefix}.markdown ${dst_prefix}.html
+    wkhtmltopdf ${dst_prefix}.html ${dst_prefix}.pdf
+}
+
+mkdir -p ${target_dir}
+
+for title in `ls markdown/*.markdown|sed 's/markdown\/\(.*\)\.markdown/\1/g'`
+do
+    generate_html_and_pdf ${title}
+done
